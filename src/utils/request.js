@@ -1,9 +1,17 @@
 import axios from 'axios'
+import JSONbig from 'json-bigint'
 
 const instance = axios.create({
   baseURL: ' http://ttapi.research.itcast.cn/app/',
   timeout: 1000
 })
+instance.defaults.transformRequest = [function (data) {
+  try {
+    return JSONbig.parse(data)
+  } catch (err) {
+    return data
+  }
+}]
 // 设置请求拦截
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
