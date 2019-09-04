@@ -1,10 +1,11 @@
 import axios from 'axios'
 import JSONbig from 'json-bigint'
-
+// 创建一个axios实例
 const instance = axios.create({
-  baseURL: ' http://ttapi.research.itcast.cn/app/',
-  timeout: 1000
+  baseURL: ' http://ttapi.research.itcast.cn/app/'
+  // timeout: 1000
 })
+// 统一处理大数字
 instance.defaults.transformRequest = [function (data) {
   try {
     return JSONbig.parse(data)

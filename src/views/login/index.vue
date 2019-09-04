@@ -2,10 +2,17 @@
   <div>
     <van-nav-bar title="登录" />
     <van-cell-group>
-      <van-field left-icon="phone-o" placeholder="请输入手机号" />
+      <van-field
+      v-model="user.mobile"
+      left-icon="phone-o"
+      placeholder="请输入手机号" />
     </van-cell-group>
     <van-cell-group>
-      <van-field center left-icon="more-o" placeholder="请输入验证码">
+      <van-field
+      v-model="user.code"
+      center
+      left-icon="more-o"
+      placeholder="请输入验证码">
         <van-button slot="button" size="small" type="default" round>获取验证码</van-button>
       </van-field>
     </van-cell-group>
@@ -25,6 +32,9 @@ export default {
         code: ''
       }
     }
+  },
+  created () {
+    console.log(this)
   }
 }
 </script>
