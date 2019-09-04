@@ -17,24 +17,38 @@
       </van-field>
     </van-cell-group>
     <div class="login-btn">
-      <van-button type="default">登录</van-button>
+      <van-button type="default" @click="onLogin">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
+import { login } from '@/api/user'
 export default {
-  name: 'login',
+  name: 'Login',
   data () {
     return {
       user: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
+      }
+    }
+  },
+  methods: {
+    async onLogin () {
+      try {
+        console.log(this.user)
+        const data = await login(this.user)
+        console.log(data)
+      } catch (err) {
+        if (err.response && err.response.status === 400) {
+          this.$toast.fail('手机号码或验证码错误')
+        }
       }
     }
   },
   created () {
-    console.log(this)
+    // console.log(this)
   }
 }
 </script>
