@@ -3,7 +3,7 @@ import JSONbig from 'json-bigint'
 import store from '@/store'
 // 创建一个axios实例
 const instance = axios.create({
-  baseURL: 'http://ttapi.research.itcast.cn/'
+  baseURL: 'http://ttapi.research.itcast.cn'
 })
 // 统一处理大数字
 instance.defaults.transformResponse = [function (data) {
@@ -27,7 +27,7 @@ instance.interceptors.request.use(function (config) {
 
 // 设置响应拦截
 instance.interceptors.response.use(function (response) {
-  return response.data.tada || response.data
+  return response.data.data || response.data
 }, function (error) {
   // Do something with response error
   return Promise.reject(error)

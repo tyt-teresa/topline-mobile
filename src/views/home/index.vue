@@ -2,26 +2,25 @@
   <div>
     <van-nav-bar title="首页" fixed />
     <van-tabs animated>
-      <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index">
+      <van-tab v-for="channel in channelList" :title="channel.name" :key="channel.id">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
           <van-cell v-for="item in list" :key="item" :title="item" />
         </van-list>
       </van-tab>
     </van-tabs>
-    <!-- <van-pull-refresh value>
-      <p>刷新次数:</p>
-    </van-pull-refresh>-->
   </div>
 </template>
 
 <script>
+import { getDafaultChannel } from '@/api/channel'
 export default {
   name: 'Home',
   data () {
     return {
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      channelList: []
     }
   },
   methods: {
@@ -39,7 +38,18 @@ export default {
           this.finished = true
         }
       }, 500)
+    },
+    async loadChannels () {
+      try {
+        const data = await getDafaultChannel()
+        this.channelList = data.channels
+      } catch (err) {
+        console.log(err)
+      }
     }
+  },
+  created () {
+    this.loadChannels()
   }
 }
 </script>
