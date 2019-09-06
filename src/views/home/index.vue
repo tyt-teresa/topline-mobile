@@ -2,6 +2,7 @@
   <div>
     <van-nav-bar title="首页" fixed />
     <van-tabs animated v-model="activeIndex">
+      <van-icon name="wap-nav" slot="nav-right" calss="nav-btn" />
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <van-list
         v-model="currentChannel.loading"
@@ -10,20 +11,25 @@
         @load="onLoad">
           <van-cell
           v-for="article in currentChannel.articles"
-          :key="article.art_id"
+          :key="article.art_id.toString()"
           :title="article.title"
          />
         </van-list>
       </van-tab>
     </van-tabs>
+    <channel-edit></channel-edit>
   </div>
 </template>
 
 <script>
 import { getDafaultChannel } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+import ChannelEdit from '@/components/channelEdit'
 export default {
   name: 'Home',
+  components: {
+    ChannelEdit
+  },
   data () {
     return {
       channels: [],
@@ -75,11 +81,17 @@ export default {
     position: fixed;
     top: 46px;
     left: 0;
+    right:10px;
     z-index:2;
   }
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
   }
+}
+.nav-btn{
+  position: fixed;
+  right:5px;
+  line-height: 44px;
 }
 </style>
