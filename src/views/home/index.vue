@@ -4,7 +4,8 @@
     <van-tabs animated v-model="activeIndex">
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <van-list
-        :finished="finished"
+        v-model="currentChannel.loading"
+        :finished="currentChannel.finished"
         finished-text="没有更多了"
         @load="onLoad">
           <van-cell
@@ -25,9 +26,6 @@ export default {
   name: 'Home',
   data () {
     return {
-      list: [],
-      loading: false,
-      finished: false,
       channels: [],
       activeIndex: 0
     }
@@ -48,6 +46,8 @@ export default {
         data.channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
+          channel.loading = false
+          channel.finished = false
         })
         this.channels = data.channels
       } catch (err) {
@@ -60,7 +60,10 @@ export default {
         timestamp: this.currentChannel.timestamp || Date.now(),
         withTop: 1
       })
-      console.log(data)
+      this.currentChannel.timestamp = data.pre_timestamp
+      this.currentChannel.articles.push(...data.results)
+      this.currentChannel.loading = false
+      this.currentChannel.finished = true
     }
   }
 }

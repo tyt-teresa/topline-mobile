@@ -29,7 +29,6 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   return response.data.data || response.data
 }, function (error) {
-  // Do something with response error
   return Promise.reject(error)
 })
 
