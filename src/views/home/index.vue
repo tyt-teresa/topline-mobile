@@ -1,39 +1,45 @@
 <template>
-  <div>
-    <van-nav-bar title="首页" fixed />
+  <channel-edit>
+    <van-nav-bar title="黑馬頭條" fixed />
     <van-tabs animated v-model="activeIndex">
       <van-icon name="wap-nav" slot="nav-right" calss="nav-btn" />
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
-        <van-list
-        v-model="currentChannel.loading"
-        :finished="currentChannel.finished"
-        finished-text="没有更多了"
-        @load="onLoad">
-          <van-cell
-          v-for="article in currentChannel.articles"
-          :key="article.art_id.toString()"
-          :title="article.title"
-         />
-        </van-list>
+        <van-pull-refresh
+        :success-text="successText"
+        v-model="currentChannel.pullloading"
+        @refresh="onRefresh">
+          <van-list
+            v-model="currentChannel.loading"
+            :finished="currentChannel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <van-cell
+              v-for="article in currentChannel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            />
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
-    <channel-edit></channel-edit>
-  </div>
+  </channel-edit>
 </template>
 
 <script>
 import { getDafaultChannel } from '@/api/channel'
 import { getArticles } from '@/api/articles'
-import ChannelEdit from '@/components/channelEdit'
+// import ChannelEdit from '@/components/channelEdit'
 export default {
   name: 'Home',
   components: {
-    ChannelEdit
+    // ChannelEdit
   },
   data () {
     return {
       channels: [],
-      activeIndex: 0
+      activeIndex: 0,
+      successText: ''
     }
   },
   created () {
@@ -52,8 +58,11 @@ export default {
         data.channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
+          // 上拉加載歷史數據
           channel.loading = false
           channel.finished = false
+          // 下拉加載新數據
+          channel.pullloading = false
         })
         this.channels = data.channels
       } catch (err) {
@@ -70,7 +79,22 @@ export default {
       this.currentChannel.articles.push(...data.results)
       this.currentChannel.loading = false
       this.currentChannel.finished = true
+    },
+    async onRefresh () {
+      try {
+        const data = await getArticles({
+          channelId: this.currentChannel.id,
+          timestamp: this.currentChannel.timestamp || Date.now(),
+          withTop: 1
+        })
+        this.currentChannel.articles.unshift(...data.results)
+        this.successText = `加載了${data.results.length}條數據`
+        this.currentChannel.pullloading = false
+      } catch (err) {
+        console.log(err)
+      }
     }
+
   }
 }
 </script>
@@ -81,17 +105,17 @@ export default {
     position: fixed;
     top: 46px;
     left: 0;
-    right:10px;
-    z-index:2;
+    right: 10px;
+    z-index: 2;
   }
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
   }
 }
-.nav-btn{
+.nav-btn {
   position: fixed;
-  right:5px;
+  right: 5px;
   line-height: 44px;
 }
 </style>
