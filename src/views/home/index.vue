@@ -1,10 +1,17 @@
 <template>
   <div>
     <van-nav-bar title="首页" fixed />
-    <van-tabs animated>
-      <van-tab v-for="channel in channelList" :title="channel.name" :key="channel.id">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="item in list" :key="item" :title="item" />
+    <van-tabs animated v-model="activeIndex">
+      <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
+        <van-list
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad">
+          <van-cell
+          v-for="article in currentChannel.articles"
+          :key="article.art_id"
+          :title="article.title"
+         />
         </van-list>
       </van-tab>
     </van-tabs>
@@ -13,6 +20,7 @@
 
 <script>
 import { getDafaultChannel } from '@/api/channel'
+import { getArticles } from '@/api/articles'
 export default {
   name: 'Home',
   data () {
@@ -20,36 +28,40 @@ export default {
       list: [],
       loading: false,
       finished: false,
-      channelList: []
-    }
-  },
-  methods: {
-    onLoad () {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
-    },
-    async loadChannels () {
-      try {
-        const data = await getDafaultChannel()
-        this.channelList = data.channels
-      } catch (err) {
-        console.log(err)
-      }
+      channels: [],
+      activeIndex: 0
     }
   },
   created () {
     this.loadChannels()
+  },
+  computed: {
+    // 返回当前的频道对象
+    currentChannel () {
+      return this.channels[this.activeIndex]
+    }
+  },
+  methods: {
+    async loadChannels () {
+      try {
+        const data = await getDafaultChannel()
+        data.channels.forEach(channel => {
+          channel.timestamp = null
+          channel.articles = []
+        })
+        this.channels = data.channels
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async onLoad () {
+      const data = await getArticles({
+        channelId: this.currentChannel.id,
+        timestamp: this.currentChannel.timestamp || Date.now(),
+        withTop: 1
+      })
+      console.log(data)
+    }
   }
 }
 </script>
