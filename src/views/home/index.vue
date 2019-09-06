@@ -5,9 +5,10 @@
       <van-icon name="wap-nav" slot="nav-right" calss="nav-btn" />
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <van-pull-refresh
-        :success-text="successText"
-        v-model="currentChannel.pullloading"
-        @refresh="onRefresh">
+          :success-text="successText"
+          v-model="currentChannel.pullloading"
+          @refresh="onRefresh"
+        >
           <van-list
             v-model="currentChannel.loading"
             :finished="currentChannel.finished"
@@ -18,7 +19,23 @@
               v-for="article in currentChannel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
-            />
+            >
+              <div slot="label">
+                <van-grid :border="false" :column-num="3">
+                  <van-grid-item v-for="(img,index) in article.cover.images" :key="index">
+                    <van-image height="80" :src="img" />
+                  </van-grid-item>
+                </van-grid>
+                <div class="article-info">
+                  <div class="meta">
+                    <span>{{article.aut_name}}</span>
+                    <span>{{article.comm_count}}</span>
+                    <span>{{article.pubdate|relativeTime}}</span>
+                  </div>
+                  <van-icon name="close" />
+                </div>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -94,7 +111,6 @@ export default {
         console.log(err)
       }
     }
-
   }
 }
 </script>
@@ -111,8 +127,17 @@ export default {
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+    .article-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .meta span {
+        margin-right: 10px;
+      }
+    }
   }
 }
+
 .nav-btn {
   position: fixed;
   right: 5px;
