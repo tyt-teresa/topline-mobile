@@ -1,14 +1,16 @@
 <template>
-  <channel-edit>
+  <div>
     <van-nav-bar title="黑馬頭條" fixed />
     <van-tabs animated v-model="activeIndex">
       <van-icon name="wap-nav" slot="nav-right" calss="nav-btn" />
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
+        <!-- 下拉刷新列表 -->
         <van-pull-refresh
           :success-text="successText"
           v-model="currentChannel.pullloading"
           @refresh="onRefresh"
         >
+        <!-- 上拉加載歷史數據 -->
           <van-list
             v-model="currentChannel.loading"
             :finished="currentChannel.finished"
@@ -22,8 +24,13 @@
             >
               <div slot="label">
                 <van-grid :border="false" :column-num="3">
-                  <van-grid-item v-for="(img,index) in article.cover.images" :key="index">
-                    <van-image height="80" :src="img" />
+                  <van-grid-item v-for="(img,index) in article.cover.images" :key="img+index">
+                    <van-image height="80" lazy-load :src="img">
+                      <template v-slot:loading>
+                        <van-loading type="spinner" size="20" />
+                      </template>
+                      <template v-slot:error>加载失败</template>
+                    </van-image>
                   </van-grid-item>
                 </van-grid>
                 <div class="article-info">
@@ -32,7 +39,8 @@
                     <span>{{article.comm_count}}</span>
                     <span>{{article.pubdate|relativeTime}}</span>
                   </div>
-                  <van-icon name="close" />
+                  <!-- 點擊X按鈕記錄當前文章对象並控制MoreAction彈層 -->
+                  <van-icon name="close" @click="handelMoreAction(article)"/>
                 </div>
               </div>
             </van-cell>
@@ -40,23 +48,38 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
-  </channel-edit>
+    <!-- 彈出組件moreAction -->
+    <!-- 如果article的值為null,moreAction不顯示 -->
+    <more-action
+    @handelSuccess="handelSuccess"
+    v-if="currentArticle"
+    :article="currentArticle"
+    v-model="showMoreAction"
+    ></more-action>
+  </div>
 </template>
 
 <script>
 import { getDafaultChannel } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+import Vue from 'vue'
+import { Lazyload } from 'vant'
+import MoreAction from '@/components/moreAction'
 // import ChannelEdit from '@/components/channelEdit'
+Vue.use(Lazyload)
 export default {
   name: 'Home',
   components: {
+    MoreAction
     // ChannelEdit
   },
   data () {
     return {
       channels: [],
       activeIndex: 0,
-      successText: ''
+      successText: '',
+      showMoreAction: false,
+      currentArticle: null
     }
   },
   created () {
@@ -69,6 +92,20 @@ export default {
     }
   },
   methods: {
+    // MoreAction操作成功執行的方法
+    handelSuccess () {
+      // 隱藏彈層
+      this.showMoreAction = false
+      // 刪除當前的文章數據
+      const articles = this.currentChannel.articles
+      const index = articles.findIndex((article) => article.art_id === this.currentArticle.art_id)
+      articles.splice(index, 1)
+    },
+    // 點擊X按鈕,顯示組件MoreAction,並記錄當前的文章
+    handelMoreAction (article) {
+      this.showMoreAction = true
+      this.currentArticle = article
+    },
     async loadChannels () {
       try {
         const data = await getDafaultChannel()

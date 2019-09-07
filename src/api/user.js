@@ -5,3 +5,10 @@ export const login = ({ mobile, code }) => {
     code
   })
 }
+
+// 拉黑作者接口
+export const blacklist = (id) => {
+  return request.post('/app/v1_0/user/blacklists', {
+    target: id
+  })
+}
