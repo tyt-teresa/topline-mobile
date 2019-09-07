@@ -62,6 +62,8 @@
 <script>
 import { getDafaultChannel } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+// 優化頻道
+import { getItem, setItem } from '@/utils/localStorage'
 import Vue from 'vue'
 import { Lazyload } from 'vant'
 import MoreAction from '@/components/moreAction'
@@ -108,8 +110,19 @@ export default {
     },
     async loadChannels () {
       try {
-        const data = await getDafaultChannel()
-        data.channels.forEach(channel => {
+        let channels = []
+        if (this.$store.state.user) {
+          const data = await getDafaultChannel()
+          channels = data.channels
+        } else {
+          channels = getItem('channels')
+          if (!channels) {
+            const data = await getDafaultChannel()
+            channels = data.channels
+            setItem('channels', channels)
+          }
+        }
+        channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
           // 上拉加載歷史數據
@@ -118,7 +131,7 @@ export default {
           // 下拉加載新數據
           channel.pullloading = false
         })
-        this.channels = data.channels
+        this.channels = channels
       } catch (err) {
         console.log(err)
       }

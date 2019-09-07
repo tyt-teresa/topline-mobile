@@ -7,9 +7,9 @@
   :showCancelButton="false"
   closeOnClickOverlay>
     <van-cell-group v-show="!showReports">
-      <van-cell title="不感興趣" @click="handel(dislike)" />
+      <van-cell title="不感興趣" @click="handel('dislike')" />
       <van-cell title="反饋垃圾內容" is-link @click="showReports=true"/>
-      <van-cell title="拉黑作者" @click="handel(blacklist)" />
+      <van-cell title="拉黑作者" @click="handel('blacklist')" />
     </van-cell-group>
     <van-cell-group v-show="showReports">
       <van-cell icon="arrow-left" title="反饋內容" @click="showReports=false"/>
@@ -17,7 +17,7 @@
       v-for="item in reportList"
       :key="item.type"
       :title="item.title"
-      @click="handel(report,item.type)" />
+      @click="handel('reports',item.type)" />
     </van-cell-group>
   </van-dialog>
 </template>
@@ -59,7 +59,7 @@ export default {
         case 'blacklist':
           this.blacklist()
           break
-        case 'report':
+        case 'reports':
           this.reports(reportType)
           break
       }
@@ -91,6 +91,9 @@ export default {
         this.$toast.fail('操作失敗')
       }
     }
+  },
+  created () {
+    // this.handel()
   }
 }
 </script>
