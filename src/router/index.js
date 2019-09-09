@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/views/login'
 import Tabbar from '@/views/tabbar'
 import Home from '@/views/home'
 
@@ -24,12 +23,17 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: () => import(/* webpackChunkName: "Login" */ '../views/login')
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: () => import(/* webpackChunkName: "Search" */ '../views/search')
+    },
+    {
+      path: '/search/:q',
+      name: 'SearchResult',
+      component: () => import(/* webpackChunkName: "SearchResult" */ '../views/search/components/searchResult')
     }
-    // {
-    //   path: '/login',
-    //   name: 'Login',
-    //   component: () => import(/* webpackChunkName: "about" */ '../views/login')
-    // }
   ]
 })

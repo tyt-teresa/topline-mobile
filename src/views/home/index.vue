@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="黑馬頭條" fixed />
     <van-tabs animated v-model="activeIndex">
-      <van-icon name="wap-nav" slot="nav-right" calss="nav-btn" />
+      <van-icon slot="nav-right" name="wap-nav" class="nav-btn" @click="showChannelEdit=true" />
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新列表 -->
         <van-pull-refresh
@@ -56,6 +56,12 @@
     :article="currentArticle"
     v-model="showMoreAction"
     ></more-action>
+    <channel-edit
+    v-model="showChannelEdit"
+    :channels="channels"
+    :active="activeIndex"
+    @activeChange="handelChange"
+    ></channel-edit>
   </div>
 </template>
 
@@ -66,14 +72,15 @@ import { getArticles } from '@/api/articles'
 import { getItem, setItem } from '@/utils/localStorage'
 import Vue from 'vue'
 import { Lazyload } from 'vant'
-import MoreAction from '@/components/moreAction'
-// import ChannelEdit from '@/components/channelEdit'
+import MoreAction from '@/components/home/moreAction'
+// 頻道管理
+import ChannelEdit from '@/components/home/channelEdit'
 Vue.use(Lazyload)
 export default {
   name: 'Home',
   components: {
-    MoreAction
-    // ChannelEdit
+    MoreAction,
+    ChannelEdit
   },
   data () {
     return {
@@ -81,7 +88,8 @@ export default {
       activeIndex: 0,
       successText: '',
       showMoreAction: false,
-      currentArticle: null
+      currentArticle: null,
+      showChannelEdit: false
     }
   },
   created () {
@@ -94,6 +102,10 @@ export default {
     }
   },
   methods: {
+    handelChange (index) {
+      this.activeIndex = index
+      this.showChannelEdit = false
+    },
     // MoreAction操作成功執行的方法
     handelSuccess () {
       // 隱藏彈層
@@ -173,6 +185,14 @@ export default {
     left: 0;
     right: 10px;
     z-index: 2;
+    .nav-btn {
+      position: fixed;
+      right: 10px;
+      line-height: 44px;
+      background-color: #fff;
+      opacity: 0.8;
+      font-size: 22px;
+    }
   }
   /deep/ .van-tabs__content {
     margin-top: 90px;
@@ -186,11 +206,5 @@ export default {
       }
     }
   }
-}
-
-.nav-btn {
-  position: fixed;
-  right: 5px;
-  line-height: 44px;
 }
 </style>
