@@ -28,7 +28,7 @@
            v-show="!isEdit"
            name="delete" style="line-height:inherit" size="20px"/>
       </van-cell>
-      <van-cell v-for="(item,index) in histories" :key="index" :title="item">
+      <van-cell v-for="(item,index) in histories" :key="index" :title="item" @click="onSearch(item)">
           <van-icon name="close" v-show="isEdit" size="18px" @click="handelDelete(index)"/>
       </van-cell>
     </van-cell-group>
@@ -75,19 +75,18 @@ export default {
     },
     // 搜索歷史記錄
     async onSearch (item) {
-    // 判斷histories中是否已存在item
+      this.$router.push({
+        name: 'search-result',
+        params: {
+          q: item
+        }
+      })
+      // 判斷histories中是否已存在item
       if (this.histories.includes(item)) {
         return
       }
       // 記錄搜索歷史
       this.histories.push(item)
-      // 判斷用戶是否登錄
-      if (this.user) {
-        // const data = await getSearchHistory()
-        // this.histories.push(...data.keywords)
-      }
-      // 沒有登錄,把歷史記錄存儲到本地中
-    //   storageTools.setItem('history', this.histories)
     },
     onCancel () {},
     // 搜索聯想建議

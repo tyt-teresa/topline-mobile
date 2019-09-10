@@ -31,9 +31,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "Search" */ '../views/search')
     },
     {
-      path: '/search/:q',
-      name: 'SearchResult',
-      component: () => import(/* webpackChunkName: "SearchResult" */ '../views/search/components/searchResult')
+      path: '/search-result/:q',
+      name: 'search-result',
+      props: true,
+      component: () => import(/* webpackChunkName: "SearchResult" */ '../views/searchResult')
     }
   ]
 })
