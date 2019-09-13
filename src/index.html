@@ -7,8 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="../node_modules/lodash/lodash.js"></script>
+    <!-- <script src="../node_modules/lodash/lodash.js"></script> -->
+    <input type="file" id="file">
+    <img src="" alt="" id="img">
     <script>
+        var file = document.getElementById('file')
+        file.onchange=function(){
+            // var fileReader = new FileReader()
+            // // console.log(fileReader);
+            // fileReader.readAsDataURL(file.files[0])
+            // fileReader.onload=function(){
+            //     // console.log(fileReader);
+
+            //     document.getElementById('img').src=fileReader.result
+            // }
+            var url = URL.createObjectURL(file.files[0])
+            document.getElementById('img').src=url
+        }
+    </script>
+    <!-- <script>
         /**
          *降频函数
          *这个 debounce 函数在给定的时间间隔内只允许你提供的回调函数执行一次，以此降低它的执行频率。
@@ -18,33 +35,33 @@
          * @param {*} immediate
          * @returns
          */
-        function debounce(func, wait, immediate) {
-            var timeout;
-            return function() {
-                var context = this, args = arguments;
-                var later = function() {
-                    timeout = null;
-                    if (!immediate) func.apply(context, args);
-                };
-                var callNow = immediate && !timeout;
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-                if (callNow) func.apply(context, args);
-            };
-        };
-        function debounce(fn,delay) {
-            var timerId
-            return function(){
-                clearTimeout(timerId)
-                timerId=setTimeout(()=>{
-                    fn()
-                } ,delay)
+        // function debounce(func, wait, immediate) {
+        //     var timeout;
+        //     return function() {
+        //         var context = this, args = arguments;
+        //         var later = function() {
+        //             timeout = null;
+        //             if (!immediate) func.apply(context, args);
+        //         };
+        //         var callNow = immediate && !timeout;
+        //         clearTimeout(timeout);
+        //         timeout = setTimeout(later, wait);
+        //         if (callNow) func.apply(context, args);
+        //     };
+        // };
+        // function debounce(fn,delay) {
+        //     var timerId
+        //     return function(){
+        //         clearTimeout(timerId)
+        //         timerId=setTimeout(()=>{
+        //             fn()
+        //         } ,delay)
 
-            }
-        }
-        function throttle(fn,delay){
-            var timerId,last
-        }
-    </script>
+        //     }
+        // }
+        // function throttle(fn,delay){
+        //     var timerId,last
+        // }
+    </script> -->
 </body>
 </html>

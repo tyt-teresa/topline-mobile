@@ -8,7 +8,8 @@ import { relativeTime } from './utils/dayjs'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
 import 'vant/lib/index.css'
 import './styles/index.less'
-
+import Checklogin from './utils/checkLogin'
+Vue.use(Checklogin)
 Vue.use(Vant)
 Vue.use(VeeValidate, {
   events: ''

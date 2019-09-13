@@ -35,6 +35,12 @@ export default new Router({
       name: 'search-result',
       props: true,
       component: () => import(/* webpackChunkName: "SearchResult" */ '../views/searchResult')
+    },
+    {
+      path: '/detail/:id',
+      name: 'detail',
+      props: true,
+      component: () => import(/* webpackChunkName: "SearchResult" */ '../views/details')
     }
   ]
 })

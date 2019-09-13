@@ -15,7 +15,7 @@ export const getArticles = ({
   })
 }
 
-// 對文章不感興趣
+// 對文章不感興趣(同取消不喜歡文章)
 export const dislikeArticles = (id) => {
   return request.post('/app/v1_0/article/dislikes', {
     target: id
@@ -33,3 +33,29 @@ export const reportsArticle = ({
     type
   })
 }
+
+// 獲取新聞文章詳情
+export const getDetailArticle = (id) => {
+  return request.get(`/app/v1_0/articles/${id}`)
+}
+
+// 對文章點讚
+export const likingArticle = (id) => {
+  return request.post('/app/v1_0/article/likings', {
+    target: id
+  })
+}
+
+// 取消文章點讚
+export const unlikingArticle = (id) => {
+  return request.delete(`/app/v1_0/article/likings/${id}`)
+}
+
+// 不喜歡文章
+export const dislikeArticle = (id) => {
+  return request.post('/app/v1_0/article/dislikes', {
+    target: id
+  })
+}
+
+// 取消不喜歡文章(同對文章不感興趣)

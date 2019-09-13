@@ -94,6 +94,9 @@ export default {
         this.$emit('activeChange', index)
         return
       }
+      if (this.active === this.channels.length - 1) {
+        this.$emit('last')
+      }
       // 2.編輯模式
       this.channels.splice(index, 1)
       if (this.user) {
@@ -113,10 +116,6 @@ export default {
       this.$set(channel, 'loading', false)
       this.$set(channel, 'finished', false)
       this.$set(channel, 'pullloading', false)
-      // channel.timestamp = null
-      // channel.articles = []
-      // channel.loading = false
-      // channel.finished = false
       this.channels.push(channel)
       if (this.user) {
         try {

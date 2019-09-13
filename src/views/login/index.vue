@@ -66,7 +66,8 @@ export default {
         // this.$store.commit('setUser', data)
         this.setUser(data)
         // 跳转到首页并提示成功
-        this.$router.push('/')
+        // this.$router.push('/')
+        this.$router.push(this.$route.query.redirect || '/')
         this.$toast.fail('登录成功')
         this.isLoading = false
       } catch (err) {

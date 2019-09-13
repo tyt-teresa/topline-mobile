@@ -39,6 +39,7 @@
 import { getSuggestion, getSearchHistory } from '@/api/search'
 import { mapState } from 'vuex'
 import * as storageTools from '@/utils/localStorage'
+import _ from 'lodash'
 export default {
   name: 'Search',
   data () {
@@ -74,7 +75,8 @@ export default {
       return item.replace(reg, `<span style="color:red">${this.value}</span>`)
     },
     // 搜索歷史記錄
-    async onSearch (item) {
+    onSearch (item) {
+      // 點擊跳轉至搜索結果頁面
       this.$router.push({
         name: 'search-result',
         params: {
@@ -90,7 +92,8 @@ export default {
     },
     onCancel () {},
     // 搜索聯想建議
-    async handelInput () {
+    // 使用函數防抖方法解決input輸入框頻繁發送請求
+    handelInput: _.debounce(async function () {
       if (this.value.length === 0) {
         return
       }
@@ -100,7 +103,7 @@ export default {
       } catch (err) {
         console.log(err)
       }
-    }
+    }, 300)
   }
 }
 </script>

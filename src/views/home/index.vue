@@ -21,6 +21,7 @@
               v-for="article in currentChannel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
+              @click="$router.push({name:'detail',params:{id:article.art_id.toString()}})"
             >
               <div slot="label">
                 <van-grid :border="false" :column-num="3">
@@ -40,7 +41,8 @@
                     <span>{{article.pubdate|relativeTime}}</span>
                   </div>
                   <!-- 點擊X按鈕記錄當前文章对象並控制MoreAction彈層 -->
-                  <van-icon name="close" @click="handelMoreAction(article)"/>
+                  <!-- .stop和點擊文章跳轉至詳情頁功能分開 -->
+                  <van-icon name="close" @click.stop="handelMoreAction(article)"/>
                 </div>
               </div>
             </van-cell>
@@ -61,6 +63,7 @@
     :channels="channels"
     :active="activeIndex"
     @activeChange="handelChange"
+    @last="handelLast"
     ></channel-edit>
   </div>
 </template>
@@ -102,6 +105,10 @@ export default {
     }
   },
   methods: {
+    // 當頻道管理刪除的是激活索引數組最後一項時
+    handelLast () {
+      this.activeIndex--
+    },
     handelChange (index) {
       this.activeIndex = index
       this.showChannelEdit = false
@@ -166,9 +173,9 @@ export default {
           timestamp: this.currentChannel.timestamp || Date.now(),
           withTop: 1
         })
+        this.currentChannel.pullloading = false
         this.currentChannel.articles.unshift(...data.results)
         this.successText = `加載了${data.results.length}條數據`
-        this.currentChannel.pullloading = false
       } catch (err) {
         console.log(err)
       }
