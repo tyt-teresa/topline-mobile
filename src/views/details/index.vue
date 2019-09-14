@@ -8,8 +8,14 @@
       <author-info :article="article"></author-info>
       <!-- 文章內容 -->
       <div class="article-content" v-html="article.content"></div>
-        <!-- 點讚和取消 -->
+      <!-- 點讚和取消 -->
       <more-action :article="article"></more-action>
+      <!-- 評論列表 -->
+      <comment-list :isArticle="true" :id="article.art_id.toString()" ></comment-list>
+      <!-- 發表評論 -->
+      <publish-comment :isArticle="true" :target="article.art_id.toString()"></publish-comment>
+      <!-- 回復彈層 -->
+      <reply-list v-model="showReplyList" :art_id="id"></reply-list>
     </div>
   </div>
 </template>
@@ -18,12 +24,22 @@
 import { getDetailArticle } from '@/api/articles'
 import AuthorInfo from '@/components/details/authorInfo'
 import MoreAction from '@/components/details/MoreAction'
+import CommentList from '@/components/details/commentList'
+import PublishComment from '@/components/details/publishComment'
+import ReplyList from '@/components/details/replyList'
+import { mapState } from 'vuex'
 export default {
   name: 'detail',
   props: ['id'],
   components: {
     AuthorInfo,
-    MoreAction
+    MoreAction,
+    CommentList,
+    PublishComment,
+    ReplyList
+  },
+  computed: {
+    ...mapState(['showReplyList'])
   },
   data () {
     return {

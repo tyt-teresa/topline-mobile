@@ -1,6 +1,7 @@
 import axios from 'axios'
 import JSONbig from 'json-bigint'
 import store from '@/store'
+import router from '@/router'
 // 创建一个axios实例
 const instance = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn'
@@ -28,8 +29,33 @@ instance.interceptors.request.use(function (config) {
 // 设置响应拦截
 instance.interceptors.response.use(function (response) {
   return response.data.data || response.data
-}, function (error) {
-  console.dir(error)
+}, async function (error) {
+  if (error.response.status === 401) {
+    const refreshToken = store.state.user.refresh_token
+    try {
+      const response = await axios({
+        method: 'put',
+        url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+        headers: {
+          Authorization: `Bearer ${refreshToken}`
+        }
+      })
+      const token = response.data.data.token
+      store.commit('setUser', {
+        token: token,
+        refresh_token: refreshToken
+      })
+      return instance(error.config)
+    } catch (err) {
+      console.log(err)
+      router.push({
+        path: '/login',
+        query: {
+          redirect: router.currentroute.fullpath
+        }
+      })
+    }
+  }
   return Promise.reject(error)
 })
 

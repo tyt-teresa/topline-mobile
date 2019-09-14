@@ -6,7 +6,7 @@ export default {
       if (!this.$store.state.user) {
         this.$dialog.confirm({
           title: '登錄提示',
-          message: '是否跳轉到登錄頁面'
+          message: '此功能需要登錄,是否跳轉到登錄頁面'
         }).then(() => {
           this.$router.push({
             path: '/login',
