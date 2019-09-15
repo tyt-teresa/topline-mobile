@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { likingArticle, unlikingArticle, dislikeArticle, undislikeArticle } from '@/api/articles'
+import { likingArticle, unlikingArticle, dislikeArticles, undislikeArticle } from '@/api/articles'
 export default {
   name: 'MoreAction',
   props: ['article'],
@@ -70,7 +70,7 @@ export default {
           this.article.attitude = -1
           this.$toast.success('取消不喜歡成功')
         } else {
-          await dislikeArticle(this.article.art_id)
+          await dislikeArticles(this.article.art_id)
           this.article.attitude = 0
           this.$toast.success('已成功標記該文章')
         }

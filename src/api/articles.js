@@ -15,7 +15,7 @@ export const getArticles = ({
   })
 }
 
-// 對文章不感興趣(同取消不喜歡文章)
+// 對文章不感興趣(同不喜歡文章)
 export const dislikeArticles = (id) => {
   return request.post('/app/v1_0/article/dislikes', {
     target: id
@@ -51,11 +51,7 @@ export const unlikingArticle = (id) => {
   return request.delete(`/app/v1_0/article/likings/${id}`)
 }
 
-// 不喜歡文章
-export const dislikeArticle = (id) => {
-  return request.post('/app/v1_0/article/dislikes', {
-    target: id
-  })
+// 取消不喜歡文章
+export const undislikeArticle = (id) => {
+  return request.delete(`/app/v1_0/article/dislikes/${id}`)
 }
-
-// 取消不喜歡文章(同對文章不感興趣)

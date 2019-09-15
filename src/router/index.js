@@ -16,9 +16,13 @@ export default new Router({
           path: '',
           name: 'Home',
           component: Home
+        },
+        {
+          path: '/user',
+          name: 'User',
+          component: () => import(/* webpackChunkName: "user" */ '../views/user')
         }
       ]
-
     },
     {
       path: '/login',
