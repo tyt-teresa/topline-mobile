@@ -45,6 +45,21 @@ export default new Router({
       name: 'detail',
       props: true,
       component: () => import(/* webpackChunkName: "SearchResult" */ '../views/details')
+    },
+    {
+      path: '/user-profile',
+      name: 'user-profile',
+      component: () => import(/* webpackChunkName: "user-profile" */ '../views/userprofile')
+    },
+    {
+      path: '/follow',
+      name: 'Follow',
+      component: () => import(/* webpackChunkName: "Follow" */ '../views/follow')
+    },
+    {
+      path: '/chat',
+      name: 'Chat',
+      component: () => import(/* webpackChunkName: "Chat" */ '../views/chat')
     }
   ]
 })
